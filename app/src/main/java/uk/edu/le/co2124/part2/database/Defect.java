@@ -17,5 +17,9 @@ public class Defect {
     public long defectId;
     public long parentCheckId;
     public String description;
-    public String severity; // Low High
+
+
+    // enum severity for 2 values
+    public enum Severity { LOW, HIGH } // Low High
+    public Severity severity;
 }

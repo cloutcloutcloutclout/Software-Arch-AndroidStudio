@@ -10,5 +10,7 @@ public class SafetyCheck {
     public String date;
     public String vehicleRegistration;
     public String driverName;
-    public String overallStatus; // Pass Fail
+
+    public enum OverallStatus { PASS, FAIL }
+    public OverallStatus overallStatus; //
 }
