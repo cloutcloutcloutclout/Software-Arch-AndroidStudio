@@ -22,3 +22,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
+
+
+/* TODO
+RecycleViewer
+XML / UI
+ */
