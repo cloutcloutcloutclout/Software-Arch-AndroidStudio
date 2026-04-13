@@ -39,4 +39,7 @@ public interface SafetyCheckDao {
 
     @Delete
     void deleteDefect(Defect defect);
+
+    @Query("SELECT * FROM safety_checks ORDER BY checkId DESC")
+    LiveData<List<SafetyCheck>> getAllChecks();
 }

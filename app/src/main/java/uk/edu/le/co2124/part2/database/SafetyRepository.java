@@ -57,4 +57,8 @@ public class SafetyRepository {
     public LiveData<List<SafetyCheckWithDefects>> getAllChecksWithDefects() {
         return dao.getAllChecksWithDefects();
     }
+
+    public LiveData<List<SafetyCheck>> getAllChecks() {
+        return dao.getAllChecks();
+    }
 }
