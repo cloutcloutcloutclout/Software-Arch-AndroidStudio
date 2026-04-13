@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">part2</string>
+
+    <string-array name="problems_txt">
+        <item>Wheel-Change</item>
+        <item>Broken Headlight</item>
+        <item>Cracked Mirror</item>
+        <item>Brake Issue</item>
+        <item>Oil Leak</item>
+    </string-array>
+
+    <string-array name="severity_levels">
+        <item>Low</item>
+        <item>High</item>
+    </string-array>
+
+    <string name="appName">Vehicle Safety Checker</string>
+
+    <string name="driverName">Enter Name</string>
+    <string name="vehicleReg">Enter Vehicle Registration</string>
+    <string name="vehicleIssue">Enter issue</string>
+
+    <string name="pastList">Past Inspections</string>
+    <string name="addDefect">Report Defect</string>
+    <string name="InspectDetails">Inspection Details</string>
+
+    <string name="btn_save">Save Inspection</string>
+    <string name="btn_addDefect">Add Defect</string>
+    <string name="btn_viewDetails">View details</string>
+
+    <string name="stat_pass">Pass</string>
+    <string name="stat_fail">Fail</string>
+
+    <string name="sev_high">High severity</string>
+    <string name="sev_low">Low severity</string>
+
 </resources>
