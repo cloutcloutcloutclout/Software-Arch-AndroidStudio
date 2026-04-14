@@ -12,6 +12,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
+    private SafetyViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,5 +23,21 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
+        final SafetyAdapter adapter = new SafetyAdapter();
+        recyclerView.setAdapter(adapter);
+
+        viewModel = new ViewModelProvider(this).get(SafetyViewModel.class);
+        viewModel.getAllChecksWithDefects().observe(this, adapter::setSafetyChecks);
+
+        adapter.setOnDeleteClickListener(item -> {
+            viewModel.deleteSafetyCheck(item.safetyCheck);
+        });
+
+        FloatingActionButton fab = findViewById(R.id.fabAdd);
+        if (fab != null) {
+            fab.setOnClickListener(v -> {
+                // To be implemented: navigation to AddDefectActivity
+            });
+        }
     }
 }
