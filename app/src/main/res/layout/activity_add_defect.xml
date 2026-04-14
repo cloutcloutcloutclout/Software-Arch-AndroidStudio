@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="New Safety Check"
+            android:text="@string/addDefect"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Vehicle Registration (e.g., FORD-01)"
+            android:hint="@string/vehicleReg"
             android:inputType="textCapCharacters" />
 
         <EditText
@@ -29,21 +29,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:hint="Driver Name"
+            android:hint="@string/driverName"
             android:inputType="textPersonName" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Defect Description"
+            android:text="@string/vehicleIssue"
             android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spinnerDefects"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/problems_txt"
+            android:padding="10dp" />
 
         <EditText
             android:id="@+id/etDefectDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="e.g., Broken Headlight"
+            android:layout_marginTop="8dp"
+            android:hint="Other issue..."
             android:inputType="text" />
 
         <TextView
@@ -63,14 +71,14 @@
                 android:id="@+id/rbLow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Low" />
+                android:text="@string/sev_low" />
 
             <RadioButton
                 android:id="@+id/rbHigh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="High" />
+                android:text="@string/sev_high" />
         </RadioGroup>
 
         <Button
@@ -78,7 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Save Safety Check" />
+            android:text="@string/btn_save" />
 
     </LinearLayout>
 </ScrollView>

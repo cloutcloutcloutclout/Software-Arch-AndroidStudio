@@ -41,6 +41,7 @@ public class SafetyViewModel extends AndroidViewModel {
     private String currentDriverName = "";
     private String currentDefectDescription = "";
     private int currentSeverityId = R.id.rbHigh;
+    private int currentSpinnerPosition = 0;
 
     public String getCurrentVehicleReg() { return currentVehicleReg; }
     public void setCurrentVehicleReg(String vehicleReg) { this.currentVehicleReg = vehicleReg; }
@@ -53,5 +54,9 @@ public class SafetyViewModel extends AndroidViewModel {
 
     public int getCurrentSeverityId() { return currentSeverityId; }
     public void setCurrentSeverityId(int severityId) { this.currentSeverityId = severityId; }
+
+    public int getCurrentSpinnerPosition() { return currentSpinnerPosition; }
+    public void setCurrentSpinnerPosition(int position) { this.currentSpinnerPosition = position; }
+
 
 }

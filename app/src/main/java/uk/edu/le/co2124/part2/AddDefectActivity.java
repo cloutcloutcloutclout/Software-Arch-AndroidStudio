@@ -3,9 +3,11 @@ package uk.edu.le.co2124.part2;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import uk.edu.le.co2124.part2.database.Defect;
@@ -23,8 +24,9 @@ import uk.edu.le.co2124.part2.database.SafetyCheck;
 public class AddDefectActivity extends AppCompatActivity {
 
     private SafetyViewModel viewModel;
-    private EditText etVehicleReg, etDriverName, etDefectDescription;
+    private EditText etReg, etDriver, etDesc;
     private RadioGroup rgSeverity;
+    private Spinner spinnerDefects;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,103 +35,89 @@ public class AddDefectActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Add Safety Check");
+            getSupportActionBar().setTitle(R.string.addDefect);
         }
 
         viewModel = new ViewModelProvider(this).get(SafetyViewModel.class);
-        etVehicleReg = findViewById(R.id.etVehicleReg);
-        etDriverName = findViewById(R.id.etDriverName);
-        etDefectDescription = findViewById(R.id.etDefectDescription);
+        etReg = findViewById(R.id.etVehicleReg);
+        etDriver = findViewById(R.id.etDriverName);
+        etDesc = findViewById(R.id.etDefectDescription);
         rgSeverity = findViewById(R.id.rgSeverity);
+        spinnerDefects = findViewById(R.id.spinnerDefects);
 
-        // Restore state from ViewModel
-        etVehicleReg.setText(viewModel.getCurrentVehicleReg());
-        etDriverName.setText(viewModel.getCurrentDriverName());
-        etDefectDescription.setText(viewModel.getCurrentDefectDescription());
+        // Load saved state
+        etReg.setText(viewModel.getCurrentVehicleReg());
+        etDriver.setText(viewModel.getCurrentDriverName());
+        etDesc.setText(viewModel.getCurrentDefectDescription());
         rgSeverity.check(viewModel.getCurrentSeverityId());
+        spinnerDefects.setSelection(viewModel.getCurrentSpinnerPosition());
 
-        // Update ViewModel as user types to ensure state stability across rotation
-        etVehicleReg.addTextChangedListener(new TextWatcher() {
+        // State saving for rotation test
+        setupTextSync(etReg, s -> viewModel.setCurrentVehicleReg(s));
+        setupTextSync(etDriver, s -> viewModel.setCurrentDriverName(s));
+        setupTextSync(etDesc, s -> viewModel.setCurrentDefectDescription(s));
+        
+        rgSeverity.setOnCheckedChangeListener((g, id) -> viewModel.setCurrentSeverityId(id));
+        
+        spinnerDefects.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                viewModel.setCurrentVehicleReg(s.toString());
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                viewModel.setCurrentSpinnerPosition(position);
             }
             @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        findViewById(R.id.btnSaveDefect).setOnClickListener(v -> saveCheck());
+    }
+
+    private void setupTextSync(EditText et, java.util.function.Consumer<String> action) {
+        et.addTextChangedListener(new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) { action.accept(s.toString()); }
             public void afterTextChanged(Editable s) {}
         });
+    }
 
-        etDriverName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                viewModel.setCurrentDriverName(s.toString());
-            }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-        etDefectDescription.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    private void saveCheck() {
+        String reg = etReg.getText().toString().trim();
+        String drv = etDriver.getText().toString().trim();
+        
+        // Use spinner value if custom desc is empty
+        String dsc = etDesc.getText().toString().trim();
+        if (dsc.isEmpty()) {
+            dsc = spinnerDefects.getSelectedItem().toString();
+        }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                viewModel.setCurrentDefectDescription(s.toString());
-            }
+        if (reg.isEmpty() || drv.isEmpty()) {
+            Toast.makeText(this, "Please fill in Reg and Driver", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
+        SafetyCheck check = new SafetyCheck();
+        check.date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+        check.vehicleRegistration = reg;
+        check.driverName = drv;
+        check.overallStatus = SafetyCheck.OverallStatus.FAIL;
 
-        rgSeverity.setOnCheckedChangeListener((group, checkedId) -> {
-            viewModel.setCurrentSeverityId(checkedId);
-        });
+        Defect defect = new Defect();
+        defect.description = dsc;
+        defect.severity = (rgSeverity.getCheckedRadioButtonId() == R.id.rbLow) ? Defect.Severity.LOW : Defect.Severity.HIGH;
 
-        findViewById(R.id.btnSaveDefect).setOnClickListener(v -> {
-            String vehicleReg = etVehicleReg.getText().toString().trim();
-            String driverName = etDriverName.getText().toString().trim();
-            String description = etDefectDescription.getText().toString().trim();
-            
-            if (vehicleReg.isEmpty() || driverName.isEmpty() || description.isEmpty()) {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        ArrayList<Defect> defects = new ArrayList<>();
+        defects.add(defect);
 
-            // Create a new Safety Check to hold this defect
-            SafetyCheck newCheck = new SafetyCheck();
-            newCheck.date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
-            newCheck.vehicleRegistration = vehicleReg;
-            newCheck.driverName = driverName;
-            newCheck.overallStatus = SafetyCheck.OverallStatus.FAIL;
+        viewModel.insertSafetyCheck(check, defects);
+        clearState();
+        finish();
+    }
 
-            // Create the Defect
-            Defect defect = new Defect();
-            defect.description = description;
-            
-            int selectedId = rgSeverity.getCheckedRadioButtonId();
-            if (selectedId == R.id.rbLow) {
-                defect.severity = Defect.Severity.LOW;
-            } else {
-                defect.severity = Defect.Severity.HIGH;
-            }
-
-            List<Defect> defects = new ArrayList<>();
-            defects.add(defect);
-
-            // Save to database via ViewModel
-            viewModel.insertSafetyCheck(newCheck, defects);
-            
-            // Clear ViewModel state
-            viewModel.setCurrentVehicleReg("");
-            viewModel.setCurrentDriverName("");
-            viewModel.setCurrentDefectDescription("");
-            viewModel.setCurrentSeverityId(R.id.rbHigh);
-            
-            Toast.makeText(this, "Safety Check Saved", Toast.LENGTH_SHORT).show();
-            finish();
-        });
+    private void clearState() {
+        viewModel.setCurrentVehicleReg("");
+        viewModel.setCurrentDriverName("");
+        viewModel.setCurrentDefectDescription("");
+        viewModel.setCurrentSeverityId(R.id.rbHigh);
+        viewModel.setCurrentSpinnerPosition(0);
     }
 
     @Override

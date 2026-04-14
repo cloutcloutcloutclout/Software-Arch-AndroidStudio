@@ -4,47 +4,42 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import uk.edu.le.co2124.part2.database.Defect;
 
 public class DefectAdapter extends RecyclerView.Adapter<DefectAdapter.DefectViewHolder> {
 
-    private List<Defect> defects = new ArrayList<>();
+    private List<Defect> items = new ArrayList<>();
 
     @NonNull
     @Override
     public DefectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_2, parent, false);
-        return new DefectViewHolder(itemView);
+        View view = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_2, parent, false);
+        return new DefectViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DefectViewHolder holder, int position) {
-        Defect current = defects.get(position);
+        Defect current = items.get(position);
         holder.text1.setText(current.description);
         holder.text2.setText("Severity: " + current.severity.name());
     }
 
     @Override
     public int getItemCount() {
-        return defects.size();
+        return items.size();
     }
 
     public void setDefects(List<Defect> defects) {
-        this.defects = defects;
+        this.items = defects;
         notifyDataSetChanged();
     }
 
     static class DefectViewHolder extends RecyclerView.ViewHolder {
-        private final TextView text1;
-        private final TextView text2;
+        TextView text1, text2;
 
         public DefectViewHolder(@NonNull View itemView) {
             super(itemView);
