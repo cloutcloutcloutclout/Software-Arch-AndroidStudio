@@ -7,6 +7,9 @@
         <item>Cracked Mirror</item>
         <item>Brake Issue</item>
         <item>Oil Leak</item>
+        <item>Battery Change</item>
+        <item>Faulty Plugs</item>
+        <item>Air Conditioner</item>
     </string-array>
 
     <string-array name="severity_levels">
