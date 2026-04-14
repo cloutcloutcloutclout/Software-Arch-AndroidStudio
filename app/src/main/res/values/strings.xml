@@ -30,6 +30,7 @@
     <string name="btn_save">Save Inspection</string>
     <string name="btn_addDefect">Add Defect</string>
     <string name="btn_viewDetails">View details</string>
+    <string name="btn_delete">Delete Inspection</string>
 
     <string name="stat_pass">Pass</string>
     <string name="stat_fail">Fail</string>
