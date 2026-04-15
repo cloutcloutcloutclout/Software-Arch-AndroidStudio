@@ -40,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
             viewModel.deleteSafetyCheck(item.safetyCheck);
         });
 
+        adapter.setOnItemClickListener(item -> {
+            Intent detailIntent = new Intent(this, DetailActivity.class);
+            detailIntent.putExtra("Check", item);
+            startActivity(detailIntent);
+        });
+
         FloatingActionButton fab = findViewById(R.id.fabAdd);
         if (fab != null) {
             fab.setOnClickListener(v -> {
