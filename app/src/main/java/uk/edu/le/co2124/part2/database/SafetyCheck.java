@@ -3,8 +3,10 @@ package uk.edu.le.co2124.part2.database;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "safety_checks")
-public class SafetyCheck {
+public class SafetyCheck implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public long checkId;
     public String date;

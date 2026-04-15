@@ -8,6 +8,8 @@ import java.util.List;
 
 // Class implements Serializable so it can be put as an extra on line ~46 of MainActivity, shouldn't break anything
 public class SafetyCheckWithDefects implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Embedded
     public SafetyCheck safetyCheck;
 

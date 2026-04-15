@@ -5,6 +5,8 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "defects",
         foreignKeys = @ForeignKey(
                 entity = SafetyCheck.class,
@@ -12,7 +14,7 @@ import androidx.room.PrimaryKey;
                 childColumns = "parentCheckId",
                 onDelete = ForeignKey.CASCADE),
         indices = {@Index("parentCheckId")})
-public class Defect {
+public class Defect implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public long defectId;
     public long parentCheckId;
