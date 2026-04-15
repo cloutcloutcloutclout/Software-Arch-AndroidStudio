@@ -1,6 +1,7 @@
 package uk.edu.le.co2124.part2;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +14,9 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        SafetyCheckWithDefects a = (SafetyCheckWithDefects) getIntent().getSerializableExtra("Check", SafetyCheckWithDefects.class);
+        SafetyCheckWithDefects checkWithDefects = (SafetyCheckWithDefects) getIntent().getSerializableExtra("Check", SafetyCheckWithDefects.class);
+
+        TextView mRegistration = findViewById(R.id.textview_reg);
+        mRegistration.setText(checkWithDefects.safetyCheck.vehicleRegistration);
     }
 }
