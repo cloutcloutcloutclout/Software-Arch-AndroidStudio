@@ -12,5 +12,13 @@ public class SafetyCheck {
     public String driverName;
 
     public enum OverallStatus { PASS, FAIL }
-    public OverallStatus overallStatus; //
+    public OverallStatus overallStatus;
+
+    // Constructor isn't strictly necessary but extremely convenient
+    public SafetyCheck(String date, String vehicleRegistration, String driverName, OverallStatus overallStatus) {
+        this.date = date;
+        this.vehicleRegistration = vehicleRegistration;
+        this.driverName = driverName;
+        this.overallStatus = overallStatus;
+    }
 }
