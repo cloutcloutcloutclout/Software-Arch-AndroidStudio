@@ -37,7 +37,8 @@ public class DetailActivity extends AppCompatActivity {
 
         ArrayAdapter<String> arr;
         List<String> descriptions = checkWithDefects.defects.stream()
-                .map(defect -> defect.description != null ? defect.description : "No description")
+                .map(defect -> String.join("", defect.description != null ? defect.description : "No description", " - Severity: ",
+                        defect.severity != null ? defect.severity.name() : "NONE") )
                 .collect(Collectors.toList());
         arr = new ArrayAdapter<String>(this,
                 androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
