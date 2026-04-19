@@ -66,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
         defect1.severity = Defect.Severity.HIGH;
 
         Defect defect2 = new Defect();
-        defect1.description = "Driver Side Coilover Worn";
-        defect1.severity = Defect.Severity.LOW;
+        defect2.description = "Driver Side Coilover Worn";
+        defect2.severity = Defect.Severity.LOW;
 
         Defect[] defects1 = {};
 
