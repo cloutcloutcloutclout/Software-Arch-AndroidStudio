@@ -1,10 +1,17 @@
 package uk.edu.le.co2124.part2;
 
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import uk.edu.le.co2124.part2.database.Defect;
 import uk.edu.le.co2124.part2.database.SafetyCheckWithDefects;
 
 public class DetailActivity extends AppCompatActivity {
@@ -18,5 +25,24 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView mRegistration = findViewById(R.id.textview_reg);
         mRegistration.setText(checkWithDefects.safetyCheck.vehicleRegistration);
+
+        TextView mDriver = findViewById(R.id.textview_driver);
+        mDriver.setText(checkWithDefects.safetyCheck.driverName);
+
+        TextView mDate = findViewById(R.id.textview_date);
+        mDate.setText(checkWithDefects.safetyCheck.date);
+
+        TextView mStatus = findViewById(R.id.textview_status);
+        mStatus.setText(checkWithDefects.safetyCheck.overallStatus.name());
+
+        ArrayAdapter<String> arr;
+        List<String> descriptions = checkWithDefects.defects.stream()
+                .map(defect -> defect.description != null ? defect.description : "No description")
+                .collect(Collectors.toList());
+        arr = new ArrayAdapter<String>(this,
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+                descriptions);
+        ListView mList = findViewById(R.id.list);
+        mList.setAdapter(arr);
     }
 }
