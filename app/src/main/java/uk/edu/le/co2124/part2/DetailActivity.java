@@ -1,13 +1,16 @@
 package uk.edu.le.co2124.part2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,5 +48,16 @@ public class DetailActivity extends AppCompatActivity {
                 descriptions);
         ListView mList = findViewById(R.id.list);
         mList.setAdapter(arr);
+
+        Button mReport = findViewById(R.id.email_report);
+
+        mReport.setOnClickListener(item -> {
+            Intent emailReport = new Intent(Intent.ACTION_SEND);
+            emailReport.putExtra(Intent.EXTRA_SUBJECT, String.join("", "Safety Defect Report: ", checkWithDefects.safetyCheck.vehicleRegistration));
+            emailReport.putExtra(Intent.EXTRA_TEXT, descriptions.toString().replace("[", "").replace("]", "").replace(", ", "\n"));
+            emailReport.setType("message/rfc822");
+            startActivity(Intent.createChooser(emailReport, "Choose an email client: "));
+        });
+
     }
 }
