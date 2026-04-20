@@ -1,6 +1,7 @@
 package uk.edu.le.co2124.part2;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import uk.edu.le.co2124.part2.database.Defect;
+import uk.edu.le.co2124.part2.database.SafetyCheck;
 import uk.edu.le.co2124.part2.database.SafetyCheckWithDefects;
 
 public class DetailActivity extends AppCompatActivity {
@@ -37,12 +39,15 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView mStatus = findViewById(R.id.textview_status);
         mStatus.setText(checkWithDefects.safetyCheck.overallStatus.name());
+        mStatus.setTextColor(checkWithDefects.safetyCheck.overallStatus == SafetyCheck.OverallStatus.FAIL ? 0xFFFF0000 : 0xFF00FF00);
 
         ArrayAdapter<String> arr;
         List<String> descriptions = checkWithDefects.defects.stream()
                 .map(defect -> String.join("", defect.description != null ? defect.description : "No description", " - Severity: ",
                         defect.severity != null ? defect.severity.name() : "NONE") )
                 .collect(Collectors.toList());
+        if (descriptions.isEmpty()) { descriptions.add("No Defects Listed"); }
+
         arr = new ArrayAdapter<String>(this,
                 androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
                 descriptions);
