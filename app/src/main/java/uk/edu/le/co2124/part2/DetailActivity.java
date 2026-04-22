@@ -9,6 +9,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +25,7 @@ import uk.edu.le.co2124.part2.database.SafetyCheck;
 import uk.edu.le.co2124.part2.database.SafetyCheckWithDefects;
 
 public class DetailActivity extends AppCompatActivity {
-
+    private int mStackLevel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,5 +69,25 @@ public class DetailActivity extends AppCompatActivity {
             startActivity(Intent.createChooser(emailReport, "Choose an email client: "));
         });
 
+        FloatingActionButton mAddDefect = findViewById(R.id.add_defect);
+        mAddDefect.setOnClickListener(defect -> {
+            addDefectDialog();
+        });
     }
+    public void addDefectDialog() {
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        DialogFragment newFragment = AddDefectDialog.newInstance();
+        newFragment.show(ft, "dialog");
+    }
+
 }

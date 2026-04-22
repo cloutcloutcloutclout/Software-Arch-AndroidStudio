@@ -3,38 +3,46 @@ package uk.edu.le.co2124.part2;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import uk.edu.le.co2124.part2.database.SafetyCheck;
 
 public class AddDefectDialog extends DialogFragment {
-    public interface OnDefectAddedListener {
-        void onDefectAdded(String desc, SafetyCheck.OverallStatus status);
-    }
 
-    private OnDefectAddedListener listener;
+    // Create a new instance of MyDialogFragment
+    static AddDefectDialog newInstance() {
+        AddDefectDialog f = new AddDefectDialog();
 
-    public static AddDefectDialog newInstance() {
-        return new AddDefectDialog();
+        // Supply num input as an argument.
+        Bundle args = new Bundle();
+        f.setArguments(args);
+
+        return f;
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            listener = (OnDefectAddedListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context + " must implement OnDefectAddedListener");
-        }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
-    @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // TODO: Implement function
-        return null;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.add_defect, container, false);
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // set DialogFragment title
+        getDialog().setTitle("Dialog");
+    }
 }
