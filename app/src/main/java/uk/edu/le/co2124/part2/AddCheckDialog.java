@@ -69,11 +69,12 @@ public class AddCheckDialog extends DialogFragment {
             List<String> result = IntStream.range(0, errors.size())
                     .mapToObj(i -> completed.get(i) ? errors.get(i) : "")
                     .collect(Collectors.toList());
+            boolean allEmpty = result.stream().allMatch(String::isEmpty);
 
-            String message = result.isEmpty() ? result.toString().replace("[","").replace("]", "") : "Check successfully added";
+            String message = allEmpty ? "Check successfully added" : result.toString().replace("[","").replace("]", "");
 
             Toast.makeText(this.getContext(), message, Toast.LENGTH_LONG).show();
-            if (!result.isEmpty()) {
+            if (allEmpty) {
                 try {
                     SafetyCheck check = new SafetyCheck(data[1], data[2], data[0], SafetyCheck.OverallStatus.valueOf(data[3]));
                     repository.insertSafetyCheck(check, new ArrayList<Defect>());
