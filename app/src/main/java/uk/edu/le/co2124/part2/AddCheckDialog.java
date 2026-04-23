@@ -8,12 +8,16 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import uk.edu.le.co2124.part2.database.Defect;
 import uk.edu.le.co2124.part2.database.SafetyCheck;
@@ -51,16 +55,32 @@ public class AddCheckDialog extends DialogFragment {
 
         Button mSubmit = view.findViewById(R.id.check_submit);
 
-        String[] array = {"Toast", "Machines"};
         AutoCompleteTextView mAutoView = view.findViewById(R.id.autocomplete_check);
         ArrayAdapter<String> adapterItems = new ArrayAdapter<String>(view.getContext(), R.layout.list_item, AddDefectDialog.getNames(SafetyCheck.OverallStatus.class));
         mAutoView.setAdapter(adapterItems);
 
         mSubmit.setOnClickListener(submit -> {
+            String[] data = {mDriver.getText().toString(), mDate.getText().toString(), mPlate.getText().toString(), mAutoView.getText().toString()};
 
+            List<Boolean> completed = Arrays.stream(data).map(String::isEmpty).collect(Collectors.toList());
 
+            List<String> errors = Arrays.asList(new String[]{"No driver name", "No date", "No number plate", "No pass status"});
 
-//            SafetyCheck check = new SafetyCheck();
+            List<String> result = IntStream.range(0, errors.size())
+                    .mapToObj(i -> completed.get(i) ? errors.get(i) : "")
+                    .collect(Collectors.toList());
+
+            String message = result.isEmpty() ? result.toString().replace("[","").replace("]", "") : "Check successfully added";
+
+            Toast.makeText(this.getContext(), message, Toast.LENGTH_LONG).show();
+            if (!result.isEmpty()) {
+                try {
+                    SafetyCheck check = new SafetyCheck(data[1], data[2], data[0], SafetyCheck.OverallStatus.valueOf(data[3]));
+                    repository.insertSafetyCheck(check, new ArrayList<Defect>());
+                } catch (Exception e) {
+                    Toast.makeText(this.getContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+                }
+            }
         });
 
     }
