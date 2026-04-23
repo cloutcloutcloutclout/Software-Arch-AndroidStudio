@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,6 +16,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Arrays;
 
 import uk.edu.le.co2124.part2.database.Defect;
 import uk.edu.le.co2124.part2.database.SafetyCheck;
@@ -49,14 +56,28 @@ public class AddDefectDialog extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         SafetyRepository repository = new SafetyRepository(this.getActivity().getApplication());
+
         EditText mDescription = view.findViewById(R.id.defect_description);
+
         Button mSubmit = view.findViewById(R.id.defect_submit);
+
+        AutoCompleteTextView mAutoView = view.findViewById(R.id.autocomplete_txt);
+        ArrayAdapter<String> adapterItems = new ArrayAdapter<String>(view.getContext(), R.layout.list_item, getNames(Defect.Severity.class));
+        mAutoView.setAdapter(adapterItems);
+
 
         mSubmit.setOnClickListener(listen -> {
             Defect newDefect = new Defect();
-            newDefect.description = mDescription.getText().toString();
-            newDefect.severity = Defect.Severity.HIGH;
-            newDefect.parentCheckId = mCheck.safetyCheck.checkId;
+            String severity = mAutoView.getText().toString();
+
+            if (!mDescription.getText().toString().isEmpty() || !severity.isEmpty()) {
+                newDefect.description = mDescription.getText().toString();
+                newDefect.severity = Defect.Severity.valueOf(severity);
+                newDefect.parentCheckId = mCheck.safetyCheck.checkId;
+            } else {
+                Toast.makeText(view.getContext(), "Missing Description or Severity, try again.", Toast.LENGTH_LONG).show();
+            }
+
             try {
                 repository.insertDefect(newDefect);
             } catch (Exception e) {
@@ -66,6 +87,10 @@ public class AddDefectDialog extends DialogFragment {
         });
 
         // set DialogFragment title
-        getDialog().setTitle("Dialog");
+        getDialog().setTitle("Add Defect");
+    }
+    // Because I care
+    public static String[] getNames(Class<? extends Enum<?>> e) {
+        return Arrays.stream(e.getEnumConstants()).map(Enum::name).toArray(String[]::new);
     }
 }

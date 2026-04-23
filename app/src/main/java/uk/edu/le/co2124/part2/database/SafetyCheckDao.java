@@ -1,8 +1,11 @@
 package uk.edu.le.co2124.part2.database;
 
+import static androidx.room.ForeignKey.CASCADE;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
+import androidx.room.ForeignKey;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
