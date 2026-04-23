@@ -41,7 +41,10 @@ public class SafetyRepository {
     }
 
     public void deleteSafetyCheck(SafetyCheck check) {
-        executor.execute(() -> dao.deleteSafetyCheck(check));
+        executor.execute(() -> {
+            dao.deleteDefectsForCheck(check.checkId);
+            dao.deleteSafetyCheck(check);
+        });
     }
 
     public void deleteDefect(Defect defect) {

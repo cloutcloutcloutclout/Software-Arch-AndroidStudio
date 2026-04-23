@@ -43,6 +43,9 @@ public interface SafetyCheckDao {
     @Delete
     void deleteDefect(Defect defect);
 
+    @Query("DELETE FROM defects WHERE parentCheckId = :checkId")
+    void deleteDefectsForCheck(long checkId);
+
     @Query("SELECT * FROM safety_checks ORDER BY checkId DESC")
     LiveData<List<SafetyCheck>> getAllChecks();
 }
