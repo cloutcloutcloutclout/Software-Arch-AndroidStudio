@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Arrays;
 import uk.edu.le.co2124.part2.database.Defect;
 import uk.edu.le.co2124.part2.database.SafetyCheck;
+import uk.edu.le.co2124.part2.database.SafetyCheckWithDefects;
 import uk.edu.le.co2124.part2.database.SafetyRepository;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fabAdd);
         if (fab != null) {
             fab.setOnClickListener(v -> {
-                // To be implemented: navigation to AddDefectActivity
+                addCheckDialog();
             });
         }
     }
@@ -76,5 +80,20 @@ public class MainActivity extends AppCompatActivity {
         repository.insertSafetyCheck(safe1, Arrays.asList(defects1));
 
         repository.insertSafetyCheck(safe2, Arrays.asList(defects2));
+    }
+    public void addCheckDialog() {
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        DialogFragment newFragment = AddCheckDialog.newInstance();
+        newFragment.show(ft, "dialog");
     }
 }
